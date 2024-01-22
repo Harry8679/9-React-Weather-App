@@ -1,5 +1,5 @@
 import React from 'react';
-import './Weather'
+import './Weather.scss';
 
 const Weather = () => {
   return (
