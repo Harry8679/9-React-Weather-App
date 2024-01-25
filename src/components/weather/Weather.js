@@ -9,9 +9,11 @@ const Weather = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const api = {
-    uri: 'https://api.openweathermap.org/data/2.5/',
+    url: 'https://api.openweathermap.org/data/2.5/',
     key: '51253f9dc2b503e4582c22828c3ad670'
   };
+
+  const iconUrl = 'https://api.openweathermap.org/img/w/'
 
   const getInput = e => {
     setInput(e.target.value);
@@ -21,6 +23,17 @@ const Weather = () => {
     if (e.key === 'Enter' && input === '') {
         setErrorMsg('Input cannot be empty');
         setError(true);
+    }
+
+    if (e.key === 'Enter' && input !== '') {
+        fetch(`${api.url}weather?q=${input}&unit=metrics&APPID=${api.key}`)
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            setWeather(data);
+            setInput('');
+            setError(false);
+        });
     }
   }
 
@@ -37,11 +50,11 @@ const Weather = () => {
                     <p>{errorMsg}</p>
                 ):(
                     <div className="result --card --my2">
-                        <h2>Libreville</h2>
-                        <img src="" alt="Clouds" />
-                        <p>Temperature : 23°C</p>
-                        <p>Weather : Clouds</p>
-                        <p>Temperature range : 18°C - 25°C</p>
+                        <h2>{weather.name}, {weather.sys.country}</h2>
+                        <img src={iconUrl + weather.weather[0].icon+'.png'} alt={weather.weather[0].main} />
+                        <p>Temperature : {Math.round(weather.main.temp)}°C</p>
+                        <p>Weather : {weather.weather[0].main}</p>
+                        <p>Temperature range : {Math.round(weather.main.temp_min)}°C - {Math.round(weather.main.temp_max)}°C</p>
                     </div>
                 )}
             </div>
